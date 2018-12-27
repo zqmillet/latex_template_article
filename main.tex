@@ -30,7 +30,6 @@
 % 屏蔽宏包警告
 \RequirePackage[]{silence}
 \WarningsOff[hyperref]
-\WarningsOff[fancyhdr]
 
 % 设置书签、超链接等
 \usepackage{hyperref}
@@ -65,27 +64,30 @@
 \DeclareDocumentCommand\maintitle{m}{
     \gdef\qiqi@title{#1}
 }
+\DeclareDocumentCommand\abstract{+m}{
+    \long\gdef\qiqi@abstract{#1}
+}
 
 \fancypagestyle{plain}{%
     \fancyhf{}
-    \fancyhead[L, L]{}
-    \fancyhead[C, C]{\qiqi@title}
-    \fancyhead[R, R]{\qiqi@authorname{}}
-    \fancyfoot[C, C]{}
-    \fancyfoot[R, R]{第 \thepage{} 页，共 \pageref{LastPage} 页}
-    \fancyfoot[L, L]{\zhtoday}
+    \fancyhead[L]{}
+    \fancyhead[C]{\qiqi@title}
+    \fancyhead[R]{\qiqi@authorname{}}
+    \fancyfoot[C]{}
+    \fancyfoot[R]{第 \thepage{} 页，共 \pageref{LastPage} 页}
+    \fancyfoot[L]{\zhtoday}
     \renewcommand{\headrulewidth}{0.4pt}
     \renewcommand{\footrulewidth}{0.4pt}
 }
 
 \fancypagestyle{cover}{%
     \fancyhf{}
-    \fancyhead[L, L]{}
-    \fancyhead[C, C]{\qiqi@title}
-    \fancyhead[R, R]{\qiqi@authorname{}}
-    \fancyfoot[C, C]{}
-    \fancyfoot[R, R]{第 \thepage{} 页}
-    \fancyfoot[L, L]{\zhtoday}
+    \fancyhead[L]{}
+    \fancyhead[C]{\qiqi@title}
+    \fancyhead[R]{\qiqi@authorname{}}
+    \fancyfoot[C]{}
+    \fancyfoot[R]{第 \thepage{} 页}
+    \fancyfoot[L]{\zhtoday}
     \renewcommand{\headrulewidth}{0.4pt}
     \renewcommand{\footrulewidth}{0.4pt}
 }
@@ -106,13 +108,55 @@
 %     skip = 5pt
 % }
 
+% 设置封面、摘要和目录
+\makeatletter
+\AtBeginDocument{
+    % page 1
+    \pagestyle{empty}
+    \pagenumbering{Alph}
+    \pdfbookmark[1]{封面}{Cover}
+    \begin{centering}
+    \rule{0pt}{0pt}\\[100pt]
+    {\Huge\bfseries \qiqi@title}\\[70pt]
+    {\large\textbf{作者：}\qiqi@authorname}\\\vfill
+    {\today}\\
+    \end{centering}
+    
+    % page 2
+    \clearpage
+    \setcounter{page}{1}
+    \renewcommand{\thepage}{\Roman{page}}
+    % \pdfbookmark[1]{摘要}{Abstract}
+    \addcontentsline{toc}{section}{摘要}
+    \section*{摘要}
+    \qiqi@abstract
+    
+    % page 3
+    \clearpage
+    \setcounter{tocdepth}{4}
+    \pdfbookmark[1]{\contentsname}{Contents}
+    \tableofcontents
+    
+    % page 4
+    \clearpage
+    \pagestyle{plain}
+    \setcounter{page}{1}
+    \renewcommand{\thepage}{\arabic{page}}
+}
+\makeatother
+
 % 设置标题和作者
 \maintitle{CaseBot 智能化 API 手册}
 \authorname{张琦}
+\abstract{
+这是摘要。
+
+this is abstract.
+}
+
 
 
 \begin{document}
-\input{./cover.tex}
 \section{Introduction}
 中文测试 English
 \textbf{中文测试 English}
