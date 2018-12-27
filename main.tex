@@ -1,0 +1,121 @@
+\documentclass{ctexart}
+% 中文字体采用 ctex 默认配置，调整英文字体配置
+\setromanfont{Times New Roman}
+\setsansfont{Arial}
+\setmonofont{Inconsolata}
+
+% 数学配置
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{mathtools}
+
+% 配置页面布局
+\usepackage{geometry}
+\geometry
+{
+    inner          = 1.1in,
+    outer          = 1.1in,
+    top            = 1.2in,
+    bottom         = 1.2in,
+    marginparwidth = 1.3in,
+    marginparsep   = 0pt,
+    headheight     = 21pt
+}
+
+% 段落首行缩进
+\usepackage{indentfirst}
+
+% 屏蔽宏包警告
+\RequirePackage[]{silence}
+\WarningsOff[hyperref]
+\WarningsOff[fancyhdr]
+
+% 设置书签、超链接等
+\usepackage{hyperref}
+\hypersetup{
+    bookmarks = true,
+    colorlinks,
+    linkcolor = {black},
+    citecolor = {blue!50!black},
+    urlcolor  = black,
+    bookmarksdepth = 4,
+    pdfpagelabels
+}
+
+% 设置表格
+\usepackage{tabu}
+\usepackage{longtable}
+
+% 设置列表格式
+\usepackage{enumitem}
+\setenumerate[1]{itemsep = 0pt, partopsep = 0pt, parsep = 0pt, topsep = 0pt, label = (\arabic*), leftmargin = \parindent}
+\setitemize[1]  {itemsep = 0pt, partopsep = 0pt, parsep = 0pt, topsep = 0pt, leftmargin = 1em}
+\setitemize[2]  {itemsep = 0pt, partopsep = 0pt, parsep = 0pt, topsep = 0pt, leftmargin = 1em}
+\setdescription {labelindent = 0em, itemsep = 0pt, parsep = 0pt, topsep = 0pt, partopsep = 0pt, labelsep* = 1em, leftmargin = !, style = standard, font = \normalfont}
+
+% 设置页眉页脚
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\makeatletter
+\DeclareDocumentCommand\authorname{m}{
+    \gdef\qiqi@authorname{#1}
+}
+\DeclareDocumentCommand\maintitle{m}{
+    \gdef\qiqi@title{#1}
+}
+
+\fancypagestyle{plain}{%
+    \fancyhf{}
+    \fancyhead[L, L]{}
+    \fancyhead[C, C]{\qiqi@title}
+    \fancyhead[R, R]{\qiqi@authorname{}}
+    \fancyfoot[C, C]{}
+    \fancyfoot[R, R]{第 \thepage{} 页，共 \pageref{LastPage} 页}
+    \fancyfoot[L, L]{\zhtoday}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+}
+
+\fancypagestyle{cover}{%
+    \fancyhf{}
+    \fancyhead[L, L]{}
+    \fancyhead[C, C]{\qiqi@title}
+    \fancyhead[R, R]{\qiqi@authorname{}}
+    \fancyfoot[C, C]{}
+    \fancyfoot[R, R]{第 \thepage{} 页}
+    \fancyfoot[L, L]{\zhtoday}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+}
+\makeatother
+
+% % 设置图表标题格式
+% \usepackage{caption}
+% \captionsetup[figure]{
+%     font = {small, bf},
+%     labelsep = period,
+%     textformat = simple,
+%     skip = 5pt
+% }
+% \captionsetup[table]{
+%     font = {small, bf},
+%     labelsep = period,
+%     textformat = simple,
+%     skip = 5pt
+% }
+
+% 设置标题和作者
+\maintitle{CaseBot 智能化 API 手册}
+\authorname{张琦}
+
+
+\begin{document}
+\input{./cover.tex}
+\section{Introduction}
+中文测试 English
+\textbf{中文测试 English}
+\emph{中文测试 English}
+\texttt{中文测试 English}
+\end{document}
