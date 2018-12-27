@@ -145,6 +145,75 @@
 }
 \makeatother
 
+% 设置引用格式
+\usepackage{cleveref}
+\makeatletter
+\crefformat{figure}              {图 #2#1#3}
+\crefformat{section}             {第 #2#1#3 小节}
+\crefformat{table}               {表 #2#1#3}
+\crefformat{appendix}            {附录 #2#1#3}
+\crefformat{equation}            {公式 #2(#1)#3}
+\crefformat{Example}             {例 #2#1#3}
+\crefformat{tcb@cnt@codebox}     {代码 #2#1#3}
+\crefformat{tcb@cnt@codefilebox} {代码 #2#1#3}
+\makeatother
+
+% 设置行内代码
+\usepackage[many, minted]{tcolorbox}
+\tcbuselibrary{breakable}
+\usepackage{minted}
+\usepackage{color}
+\makeatletter
+\color{black}
+\let\default@color\current@color
+\def\inlinebox@true{true}
+\define@key{inlinebox}{frame rule color} {\def\inlinebox@framerulecolor{#1}}
+\define@key{inlinebox}{frame back color} {\def\inlinebox@framebackcolor{#1}}
+\define@key{inlinebox}{frame text color} {\def\inlinebox@frametextcolor{#1}}
+\define@key{inlinebox}{frame rule width} {\def\inlinebox@framerulewidth{#1}}
+\define@key{inlinebox}{banner width}     {\def\inlinebox@bannerwidth{#1}}
+\define@key{inlinebox}{show banner}[true]{\def\inlinebox@showbanner{#1}}
+\define@key{inlinebox}{banner text color}{\def\inlinebox@bannertextcolor{#1}}
+\define@key{inlinebox}{banner back color}{\def\inlinebox@bannerbackcolor{#1}}
+\define@key{inlinebox}{banner text}      {\def\inlinebox@bannertext{#1}}
+\NewDocumentCommand{\inlinebox}{O{} m}{%
+  \setkeys{inlinebox}{%
+    frame rule color  = black,
+    frame back color  = white,
+    frame text color  = black,
+    frame rule width  = 0.4pt,
+    banner width      = 8pt,
+    show banner       = false,
+    banner text color = white,
+    banner back color = black,
+    banner text       = BAN,
+    #1
+  }%
+  \tcbox[%
+    enhanced,
+    tcbox raise base,
+    nobeforeafter,
+    boxrule           = \inlinebox@framerulewidth,
+    top               = -1pt,
+    bottom            = -1pt,
+    right             = -1pt,
+    arc               = 1pt,
+    left              = \ifx\inlinebox@showbanner\inlinebox@true\inlinebox@bannerwidth-2pt\else-1pt\fi,
+    colframe          = \inlinebox@framerulecolor,
+    coltext           = \inlinebox@frametextcolor,
+    colback           = \inlinebox@framebackcolor,
+    before upper      = {\vphantom{蛤dg}},
+    overlay           = {%
+      \begin{tcbclipinterior} \ifx\inlinebox@showbanner\inlinebox@true
+          \fill[\inlinebox@bannerbackcolor] (frame.south west) rectangle node[text = \inlinebox@bannertextcolor, scale = 0.4, font = \sffamily\bfseries, rotate = 90] {\inlinebox@bannertext} ([xshift = \inlinebox@bannerwidth]frame.north west);
+        \fi
+      \end{tcbclipinterior}%
+    }%
+  ]{#2}%
+}
+\makeatother
+\newcommand{\inlinetext}[1]{\inlinebox{\mintinline{text}{#1}}}
+
 % 设置标题和作者
 \maintitle{CaseBot 智能化 API 手册}
 \authorname{张琦}
@@ -162,4 +231,6 @@ this is abstract.
 \textbf{中文测试 English}
 \emph{中文测试 English}
 \texttt{中文测试 English}
+
+\inlinetext{int a = 3}
 \end{document}
