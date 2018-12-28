@@ -164,20 +164,20 @@
 \def\Proof{\oldProof\normalfont\itshape}
 
 
-% % 设置图表标题格式
-% \usepackage{caption}
-% \captionsetup[figure]{
-%     font = {small, bf},
-%     labelsep = period,
-%     textformat = simple,
-%     skip = 5pt
-% }
-% \captionsetup[table]{
-%     font = {small, bf},
-%     labelsep = period,
-%     textformat = simple,
-%     skip = 5pt
-% }
+% 设置图表标题格式
+\usepackage{caption}
+\captionsetup[figure]{
+    font = {small, bf},
+    labelsep = period,
+    textformat = simple,
+    skip = 5pt
+}
+\captionsetup[table]{
+    font = {small, bf},
+    labelsep = period,
+    textformat = simple,
+    skip = 5pt
+}
 
 % 设置封面、摘要和目录
 \makeatletter
@@ -291,9 +291,55 @@
 \makeatother
 \newcommand{\inlinetext}[1]{\inlinebox{\mintinline{text}{#1}}}
 \newcommand{\inlinepython}[1]{\inlinebox{\mintinline{python}{#1}}}
+\newcommand{\inlinelatex}[1]{\inlinebox{\mintinline{latex}{#1}}}
+
+% 设置行间代码
+\usemintedstyle[python]{default}
+\newtcblisting[auto counter, number within = section]{codebox}[1][]{%
+  listing only,
+  enhanced,
+  breakable,
+  left            = 6mm,
+  top             = 0mm,
+  bottom          = 0mm,
+  boxrule         = 0pt,
+  colframe        = white,
+  colback         = white,
+  colbacktitle    = white,
+  coltitle        = black,
+  opacitylower=0.5,
+  minted options  = {linenos, numbersep = 8pt, fontsize = \footnotesize, baselinestretch = 1.2, mathescape, breaklines = true, numbersep = 6.5pt},
+  overlay         = {
+  \draw ([xshift = 6mm]frame.south west) -- ([xshift = 6mm]title.south west);\draw (frame.south west) -- (frame.south east);\draw (frame.north west) -- (frame.north east);\draw (title.south west) -- (title.south east);},
+  #1%
+}
+
+\makeatletter
+\def\codebox@caption{}
+\def\codebox@label{}
+\def\codebox@continuousnumber{false}
+\def\codebox@true{true}
+\def\codebox@language{python}
+\define@key{codebox}{caption}{\renewcommand*{\codebox@caption}{#1}}
+\define@key{codebox}{label}{\renewcommand*{\codebox@label}{#1}}
+\define@key{codebox}{language}{\renewcommand*{\codebox@language}{#1}}
+\define@key{codebox}{continuous number}[true]{\renewcommand*{\codebox@continuousnumber}{#1}}
+
+\let\oldcodebox\codebox
+\RenewDocumentCommand{\codebox}{O{}}{%
+  \setkeys{codebox}{#1}%
+  \oldcodebox[title = \hspace{-6mm}\small\bfseries 代码 \thetcbcounter. \codebox@caption, label = \codebox@label, minted language = \codebox@language]%
+}
+
+\let\oldendcodebox\endcodebox
+\renewcommand{\endcodebox}{\oldendcodebox\noindent}
+
+\let\latexbox\codebox
+\let\endlatexbox\endcodebox
+\makeatother
 
 % 设置标题和作者
-\maintitle{CaseBot 智能化 API 手册}
+\maintitle{\LaTeX 模板}
 \authorname{张琦}
 \abstract{
 基于 \inlinetext{ctex} 的一个模板,字体、封面、目录、书签、页眉、页脚等都已经设置好。方便直接使用。
@@ -301,13 +347,84 @@
 
 \begin{document}
 \section{模板说明}
-\subsection{这个是二级目录}
-\subsubsection{这个是三级目录}
-这是一段中文, this is english. \textbf{这是中文粗体}, \textbf{this is bold english}. \emph{这是中文斜体}, \emph{this is italic english}. \texttt{这个是中文等宽字体}, \texttt{this is mono english}. \inlinetext{这是一段代码}, \inlinetext{this is code}.
+\subsection{章节结构}
+本模板定义了三个目录层级, 分别是一级目录 \inlinelatex{\section}, 二级目录 \inlinelatex{\subsection} 和三级目录 \inlinelatex{\subsubsection}. 目录的编号样式为阿拉伯数字加半角句号. 如果想要定义更深的目录层级, 模板作者给出两条建议:%
+%
+\begin{itemize}
+  \item 仔细斟酌文章结构;
+  \item 自行添加 \inlinelatex{\subsubsubsection} 和 \inlinelatex{\subsubsubsubsection} 的定义.
+\end{itemize}
 
-\inlinepython{print('this is python code')}
+\subsubsection{字体设置}
+本模板提供常用的文本样式:%
+%
+\begin{itemize}
+  \item 请用 \inlinelatex{\textbf{粗体字, bold text}} 来插入\textbf{粗体字, bold text};
+  \item 请用 \inlinelatex{\textit{斜体字, italic text}} 来插入\textit{斜体字, italic text};
+  \item 请用 \inlinelatex{\texttt{等宽字, mono text}} 来插入\texttt{等宽字, mono text};
+  \item 请用 \inlinelatex{\inlinetext{抄写, verbatim}} 来插入\inlinetext{抄写, verbatim};
+  \item 请用 \inlinelatex{\inlinepython{func = lambda x: x**2}} 来插入 python 代码 \inlinepython{func = lambda x: x**2};
+\end{itemize}
 
-行间代码如下所示.%
+\subsection{插入公式}
+公式分为行间公式和行内公式, 所谓行内公式就是在段落内的公式, 如 $a$, $b$, $x + y = z$ 等等. 行内公式由一对 \inlinetext{$} 符号包裹, 如\cref{code:inline equation} 所示.%
+%
+\begin{latexbox}[
+  language = latex,
+  caption = 行内公式代码,
+  label = code:inline equation
+]
+公式分为行间公式和行内公式, 所谓行内公式就是在段落内的公式, 如 $a$, $b$, $x + y = z$ 等等. 行内公式由一对 \inlinetext{$} 符号包裹, 如\cref{code:inline equation} 所示.
+\end{latexbox}
+
+行间公式又分为无编号行间公式以及有编号行间公式. 无编号行间共识如下所示.%
+%
+\begin{equation*}
+  \sum_{i=1}^\infty \frac{1}{i^2} = \frac{1}{1^2} + \frac{1}{2^2} + \frac{1}{3^2} + \cdots = \frac{\pi}{6}\text{.}
+\end{equation*}%
+%
+其代码如\cref{code:between line equation without number} 所示.%
+%
+\begin{latexbox}[
+  language = latex,
+  caption = 无编号行间公式,
+  label = code:between line equation without number
+]
+\begin{equation*}
+  \sum_{i=1}^\infty \frac{1}{i^2} = \frac{1}{1^2} + \frac{1}{2^2} + \frac{1}{3^2} + \cdots = \frac{\pi}{6}\text{.}
+\end{equation*}
+\end{latexbox}%
+%
+而有编号行间公式如\cref{eqn:between line equation with number} 所示.%
+%
+\begin{equation}\label{eqn:between line equation with number}
+  \sin^2\theta + \cos^2\theta = 1\text{.}
+\end{equation}%
+%
+其代码如\cref{code:between line equation with number} 所示.%
+%
+\begin{latexbox}[
+  language = latex,
+  caption = 有编号行间公式,
+  label = code:between line equation with number
+]
+\begin{equation}\label{eqn:between line equation with number}
+  \sin^2\theta + \cos^2\theta = 1\text{.}
+\end{equation}
+\end{latexbox}%
+%
+有编号行间公式的引用可以使用 \inlinelatex{\cref{code:between line equation with number}} 进行引用. 其它的公式输入可以参考文献 \cite{lshort}.
+
+\subsection{插入代码}
+
+\subsection{插入图片}
+
+\subsection{插入表格}
+
+\section{使用方法}
+
+
+行内公式 $\int_{x = 0}^1 x^2 \mathrm{d}x$, 行间公式如下所示.%
 %
 \begin{equation*}
     x^2 + y^2 = z^2\text{.}
@@ -344,6 +461,8 @@
 \begin{table}[!htb]
   \centering
   \tabulinesep=3pt
+  \caption{表格示例}
+  \label{tab:example of table}
   \begin{tabu}to 4cm{X[-1, c]|X[1, l]}
     \tabucline[1pt]{-}
        序号 & 内容  \\
@@ -354,7 +473,11 @@
        4 & 粒粒皆辛苦 \\
     \tabucline[1pt]{-}
   \end{tabu}
-  \caption{表格示例}
-  \label{tab:example of table}
 \end{table}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{参考文献}
+\bibliographystyle{ieeetr}
+\bibliography{./references}
 \end{document}
