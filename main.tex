@@ -419,7 +419,50 @@
 有编号行间公式的引用可以使用 \inlinelatex{\cref{code:between line equation with number}} 进行引用. 其它的公式输入可以参考文献 \cite{lshort}.
 
 \subsection{插入代码}
+插入代码请使用 \inlinetext{codebox} 环境, \inlinetext{codebox} 环境有 3 个可配置参数, 分别是:%
+%
+\begin{itemize}
+  \item \inlinetext{language}, 指定代码语言, \inlinetext{codebox} 环境会根据不同的语言实现不同的高亮, 默认值为 \inlinetext{python}.
+  \item \inlinetext{caption}, 指定代码的标题, 默认值为空.
+  \item \inlinetext{label}, 指定代码的引用键值, 默认值为空, 如果 \inlinetext{label} 为空, 则该代码不可被引用.
+\end{itemize}
 
+\begin{Example}\label{exp:insert code}\normalfont
+python 中的单例模式如\cref{code:singleton in python} 所示.
+
+\begin{codebox}[
+    caption = python 单例模式,
+    label = code:singleton in python
+]
+class Singleton(object):
+    def __new__(cls, *args, **kw):
+        if not hasattr(cls, '_instance'):
+            orig = super(Singleton, cls)
+            cls._instance = orig.__new__(cls, *args, **kw)
+        return cls._instance
+\end{codebox}
+\end{Example}
+
+要实现\cref{exp:insert code} 中的效果, 可以采用\cref{code:example of inserting code} 中的代码.%
+%
+\begin{latexbox}[
+  language = latex,
+  caption = 插入代码举例,
+  label = code:example of inserting code]
+python 中的单例模式如\cref{code:singleton in python} 所示.
+
+\begin{codebox}[
+    caption = python 单例模式,
+    label = code:singleton in python
+]
+class Singleton(object):
+    def __new__(cls, *args, **kw):
+        if not hasattr(cls, '_instance'):
+            orig = super(Singleton, cls)
+            cls._instance = orig.__new__(cls, *args, **kw)
+        return cls._instance
+\end{codebox}
+\end{latexbox}
 
 \subsection{插入图片}
 
