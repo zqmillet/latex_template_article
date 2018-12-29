@@ -40,6 +40,10 @@
 % 段落首行缩进
 \usepackage{indentfirst}
 
+% 插图
+\usepackage{tikz}
+\usetikzlibrary{petri}
+
 % 屏蔽宏包警告
 \RequirePackage[]{silence}
 \WarningsOff[hyperref]
@@ -358,7 +362,7 @@
   \item 自行添加 \inlinelatex{\subsubsubsection} 和 \inlinelatex{\subsubsubsubsection} 的定义.
 \end{itemize}
 
-\subsubsection{字体设置}
+\subsection{字体设置}
 本模板提供常用的文本样式:%
 %
 \begin{itemize}
@@ -465,62 +469,144 @@ class Singleton(object):
 \end{latexbox}
 
 \subsection{插入图片}
-
-\subsection{插入表格}
-
-\section{使用方法}
-
-
-行内公式 $\int_{x = 0}^1 x^2 \mathrm{d}x$, 行间公式如下所示.%
-%
-\begin{equation*}
-    x^2 + y^2 = z^2\text{.}
-\end{equation*}%
-%
-有编号的行间公式如\cref{eqn:test} 所示.%
-%
-\begin{equation}
-  \label{eqn:test}
-  \sum_{i=1}^\infty \frac{1}{i^2} = \frac{\pi}{6}\text{.}
-\end{equation}
-
-\lipsum[1-2]
-
-\begin{Definition}
-  我就是我, 我不是别人, 别人也不是我.
-\end{Definition}
-
-\lipsum[5]
-
-插图如\cref{fig:example of figure} 所示.%
+在文件夹 \inlinetext{./figures/} 里, 有一幅 \LaTeX{} 吉祥物的插图 \inlinetext{mascots.pdf}, 可以用\cref{code:code of inserting figure} 将该图插入到文档中, 如\cref{fig:mascots of latex} 所示.%
 %
 \begin{figure}[!htb]
   \centering
-  \begin{tikzpicture}
-    \node[rectangle, draw, inner sep = 1pt, minimum size = 3cm, align = flush center] {23333}; 
-  \end{tikzpicture}
-  \caption{插图示例}
-  \label{fig:example of figure}
+  \includegraphics[width = 0.5\textwidth]{./figures/mascots.pdf}
+  \caption{\LaTeX{} 吉祥物}
+  \label{fig:mascots of latex}
 \end{figure}
 
-表格如\cref{tab:example of table} 所示.%
+\begin{latexbox}[
+  language = latex,
+  caption = 插图图片代码示例,
+  label = code:code of inserting figure
+]
+在文件夹 \inlinetext{./figures/} 里, 有一幅 \LaTeX{} 吉祥物的插图 \inlinetext{mascots.pdf}, 可以用\cref{code:code of inserting figure} 将该图插入到文档中, 如\cref{fig:mascots of latex} 所示.%
 %
-\begin{table}[!htb]
+\begin{figure}[!htb]
   \centering
-  \tabulinesep=3pt
-  \caption{表格示例}
-  \label{tab:example of table}
-  \begin{tabu}to 4cm{X[-1, c]|X[1, l]}
-    \tabucline[1pt]{-}
-       序号 & 内容  \\
-    \tabucline[1pt]{-}
-       1 & 锄禾日当午 \\
-       2 & 汗滴禾下土 \\
-       3 & 谁知盘中餐 \\
-       4 & 粒粒皆辛苦 \\
-    \tabucline[1pt]{-}
-  \end{tabu}
-\end{table}
+  \includegraphics[width = 0.5\textwidth]{./figures/mascots.pdf}
+  \caption{\LaTeX{} 吉祥物}
+  \label{fig:mascots of latex}
+\end{figure}
+\end{latexbox}
+
+当然也可以用 \inlinetext{tikz} 宏包进行绘图, 利用\cref{code:example of tikz code} 可以产生如\cref{fig:petri net} 的插图. 如果对 \inlinetext{tikz} 有兴趣, 可以阅读 \cite{pgfmanual}.
+
+\begin{figure}[!htb]
+  \centering
+  \begin{tikzpicture}[yscale=-1.6,xscale=1.5,thick,
+  every transition/.style={draw=red,fill=red!20,minimum size=3mm},
+  every place/.style={draw=blue,fill=blue!20,minimum size=6mm}]
+  \foreach \i in {1,...,6} {
+  \node[place,label=left:$p_\i$] (p\i) at (0,\i) {};
+  \node[place,label=right:$q_\i$] (q\i) at (8,\i) {};
+  }
+  \foreach \name/\var/\vala/\valb/\height/\x in
+  {m1/m_1/f/t/2.25/3,m2/m_2/f/t/2.25/5,h/\mathit{hold}/1/2/4.5/4} {
+  \node[place,label=above:{$\var = \vala$}] (\name\vala) at (\x,\height) {};
+  \node[place,yshift=-8mm,label=below:{$\var = \valb$}] (\name\valb) at (\x,\height) {};
+  }
+  \node[token] at (p1) {}; \node[token] at (q1) {};
+  \node[token] at (m1f) {}; \node[token] at (m2f) {};
+  \node[token] at (h1) {};
+  \node[transition] at (1.5,1.5) {} edge [pre] (p1) edge [post] (p2);
+  \node[transition] at (1.5,2.5) {} edge [pre] (p2) edge[pre] (m1f)
+  edge [post](p3) edge[post] (m1t);
+  \node[transition] at (1.5,3.3) {} edge [pre] (p3) edge [post] (p4)
+  edge [pre and post] (h1);
+  \node[transition] at (1.5,3.7) {} edge [pre] (p3) edge [pre] (h2)
+  edge [post] (p4) edge [post] (h1.west);
+  \node[transition] at (1.5,4.3) {} edge [pre] (p4) edge [post] (p5)
+  edge [pre and post] (m2f);
+  \node[transition] at (1.5,4.7) {} edge [pre] (p4) edge [post] (p5)
+  edge [pre and post] (h2);
+  \node[transition] at (1.5,5.5) {} edge [pre] (p5) edge [pre] (m1t)
+  edge [post] (p6) edge [post] (m1f);
+  \node[transition] at (1.5,6.5) {} edge [pre] (p6) edge [post] (p1.south east);
+  \node[transition] at (6.5,1.5) {} edge [pre] (q1) edge [post] (q2);
+  \node[transition] at (6.5,2.5) {} edge [pre] (q2) edge [pre] (m2f)
+  edge [post] (q3) edge [post] (m2t);
+  \node[transition] at (6.5,3.3) {} edge [pre] (q3) edge [post] (q4)
+  edge [pre and post] (h2);
+  \node[transition] at (6.5,3.7) {} edge [pre] (q3) edge [pre] (h1)
+  edge [post] (q4) edge [post] (h2.east);
+  \node[transition] at (6.5,4.3) {} edge [pre] (q4) edge [post] (q5)
+  edge [pre and post] (m1f);
+  \node[transition] at (6.5,4.7) {} edge [pre] (q4) edge [post] (q5)
+  edge [pre and post] (h1);
+  \node[transition] at (6.5,5.5) {} edge [pre] (q5) edge [pre] (m2t)
+  edge [post] (q6) edge [post] (m2f);
+  \node[transition] at (6.5,6.5) {} edge [pre] (q6) edge [post] (q1.south west);
+  \end{tikzpicture}
+  \caption{Petri-Net}
+  \label{fig:petri net}
+\end{figure}
+
+\begin{latexbox}[
+  language = latex,
+  caption = \inlinetext{tikz} 插图代码示例,
+  label = code:example of tikz code
+]
+% \usepackage{tikz}
+% \usetikzlibrary{petri}
+\begin{figure}[!htb]
+  \centering
+  \begin{tikzpicture}[yscale=-1.6,xscale=1.5,thick,
+  every transition/.style={draw=red,fill=red!20,minimum size=3mm},
+  every place/.style={draw=blue,fill=blue!20,minimum size=6mm}]
+    \foreach \i in {1,...,6} {
+    \node[place,label=left:$p_\i$] (p\i) at (0,\i) {};
+    \node[place,label=right:$q_\i$] (q\i) at (8,\i) {};
+    }
+    \foreach \name/\var/\vala/\valb/\height/\x in
+    {m1/m_1/f/t/2.25/3,m2/m_2/f/t/2.25/5,h/\mathit{hold}/1/2/4.5/4} {
+    \node[place,label=above:{$\var = \vala$}] (\name\vala) at (\x,\height) {};
+    \node[place,yshift=-8mm,label=below:{$\var = \valb$}] (\name\valb) at (\x,\height) {};
+    }
+    \node[token] at (p1) {}; \node[token] at (q1) {};
+    \node[token] at (m1f) {}; \node[token] at (m2f) {};
+    \node[token] at (h1) {};
+    \node[transition] at (1.5,1.5) {} edge [pre] (p1) edge [post] (p2);
+    \node[transition] at (1.5,2.5) {} edge [pre] (p2) edge[pre] (m1f)
+    edge [post](p3) edge[post] (m1t);
+    \node[transition] at (1.5,3.3) {} edge [pre] (p3) edge [post] (p4)
+    edge [pre and post] (h1);
+    \node[transition] at (1.5,3.7) {} edge [pre] (p3) edge [pre] (h2)
+    edge [post] (p4) edge [post] (h1.west);
+    \node[transition] at (1.5,4.3) {} edge [pre] (p4) edge [post] (p5)
+    edge [pre and post] (m2f);
+    \node[transition] at (1.5,4.7) {} edge [pre] (p4) edge [post] (p5)
+    edge [pre and post] (h2);
+    \node[transition] at (1.5,5.5) {} edge [pre] (p5) edge [pre] (m1t)
+    edge [post] (p6) edge [post] (m1f);
+    \node[transition] at (1.5,6.5) {} edge [pre] (p6) edge [post] (p1.south east);
+    \node[transition] at (6.5,1.5) {} edge [pre] (q1) edge [post] (q2);
+    \node[transition] at (6.5,2.5) {} edge [pre] (q2) edge [pre] (m2f)
+    edge [post] (q3) edge [post] (m2t);
+    \node[transition] at (6.5,3.3) {} edge [pre] (q3) edge [post] (q4)
+    edge [pre and post] (h2);
+    \node[transition] at (6.5,3.7) {} edge [pre] (q3) edge [pre] (h1)
+    edge [post] (q4) edge [post] (h2.east);
+    \node[transition] at (6.5,4.3) {} edge [pre] (q4) edge [post] (q5)
+    edge [pre and post] (m1f);
+    \node[transition] at (6.5,4.7) {} edge [pre] (q4) edge [post] (q5)
+    edge [pre and post] (h1);
+    \node[transition] at (6.5,5.5) {} edge [pre] (q5) edge [pre] (m2t)
+    edge [post] (q6) edge [post] (m2f);
+    \node[transition] at (6.5,6.5) {} edge [pre] (q6) edge [post] (q1.south west);
+  \end{tikzpicture}
+  \caption{Petri-Net}
+  \label{fig:petri net}
+\end{figure}
+\end{latexbox}
+
+\subsection{插入表格}
+
+
+\section{使用方法}
 
 \clearpage
 \phantomsection
