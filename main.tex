@@ -604,7 +604,17 @@ class Singleton(object):
 \end{latexbox}
 
 \subsection{插入表格}
+表格推荐使用 \inlinetext{tabu} 宏包
 
+\begin{table}[!htb]
+    \centering
+    \begin{tabular}{c|c}
+         &  \\
+         & 
+    \end{tabular}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table}
 
 \section{使用方法}
 
