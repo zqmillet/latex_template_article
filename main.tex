@@ -63,6 +63,7 @@
 % 设置表格
 \usepackage{tabu}
 \usepackage{longtable}
+\tabulinesep = 3pt
 
 % 设置列表格式
 \usepackage{enumitem}
@@ -604,17 +605,46 @@ class Singleton(object):
 \end{latexbox}
 
 \subsection{插入表格}
-表格推荐使用 \inlinetext{tabu} 宏包,  
+表格推荐使用 \inlinetext{tabu} 宏包, 如果要生成如\cref{tab:example of table} 所示的表格, 可以使用\cref{code:example of table} 进行插入.
+
 
 \begin{table}[!htb]
     \centering
-    \begin{tabular}{c|c}
-         &  \\
-         & 
-    \end{tabular}
-    \caption{Caption}
-    \label{tab:my_label}
+    \caption{表格示例}
+    \label{tab:example of table}
+    \begin{tabu}{c|l}
+        \tabucline[1pt]{-}
+        序号 & 文本 \\
+        \hline
+        1    & 锄禾日当午\\
+        2    & 汗滴禾下土\\
+        3    & 谁知盘中餐\\
+        4    & 粒粒皆辛苦\\
+        \tabucline[1pt]{-}
+    \end{tabu}
 \end{table}
+
+\begin{latexbox}[
+    language = latex,
+    caption = 插入表格代码,
+    label = code:example of table
+]
+\begin{table}[!htb]
+    \centering
+    \caption{表格示例}
+    \label{tab:example of table}
+    \begin{tabu}{c|l}
+        \tabucline[1pt]{-}
+        序号 & 文本 \\
+        \hline
+        1    & 锄禾日当午\\
+        2    & 汗滴禾下土\\
+        3    & 谁知盘中餐\\
+        4    & 粒粒皆辛苦\\
+        \tabucline[1pt]{-}
+    \end{tabu}
+\end{table}
+\end{latexbox}
 
 \section{使用方法}
 
