@@ -316,7 +316,6 @@
   top             = 0mm,
   bottom          = 0mm,
   colframe        = white,
-  borderline horizontal = {0.4pt}{0pt}{black},
   colback         = white,
   colbacktitle    = white,
   coltitle        = black,
@@ -324,7 +323,9 @@
   titlerule style = black,
   minted options  = {linenos, numbersep = 8pt, fontsize = \footnotesize, baselinestretch = 1.2, mathescape, breaklines = true, numbersep = 6.5pt},
   overlay         = {%
-      \begin{tcbclipinterior}\draw[black] ([xshift = 6mm]frame.south west) -- ([xshift = 6mm]frame.north west);\end{tcbclipinterior}
+      \begin{tcbclipinterior}
+      \draw[black] ([xshift = 6mm]frame.south west) -- ([xshift = 6mm]frame.north west);
+    \end{tcbclipinterior}
     },
   #1%
 }
@@ -335,16 +336,20 @@
 \def\codebox@continuousnumber{false}
 \def\codebox@true{true}
 \def\codebox@language{python}
+\def\codebox@file{}
 \define@key{codebox}{caption}{\renewcommand*{\codebox@caption}{#1}}
 \define@key{codebox}{label}{\renewcommand*{\codebox@label}{#1}}
 \define@key{codebox}{language}{\renewcommand*{\codebox@language}{#1}}
 \define@key{codebox}{continuous number}[true]{\renewcommand*{\codebox@continuousnumber}{#1}}
+\define@key{codebox}{file}{\renewcommand*{\codebox@file}{#1}}
 
 \let\oldcodebox\codebox
 \RenewDocumentCommand{\codebox}{O{}}{%
   \setkeys{codebox}{#1}%
   \oldcodebox[title = \hspace{-6mm}\small\bfseries 代码 \thetcbcounter. \codebox@caption, label = \codebox@label, minted language = \codebox@language]%
 }
+
+
 
 \let\oldendcodebox\endcodebox
 \renewcommand{\endcodebox}{\oldendcodebox\noindent}
