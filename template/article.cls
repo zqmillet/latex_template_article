@@ -349,7 +349,41 @@
   \oldcodebox[title = \hspace{-6mm}\small\bfseries 代码 \thetcbcounter. \codebox@caption, label = \codebox@label, minted language = \codebox@language]%
 }
 
+\newtcolorbox[use counter from = codebox, number within = section]{codefilebox}[1][]{%
+  listing only,
+  enhanced,
+  breakable,
+  sharp corners,
+  left            = 6mm,
+  top             = 0mm,
+  bottom          = 0mm,
+  colframe        = white,
+  colback         = white,
+  colbacktitle    = white,
+  coltitle        = black,
+  titlerule       = 0.4pt,
+  titlerule style = black,
+  minted options  = {linenos, numbersep = 8pt, fontsize = \footnotesize, baselinestretch = 1.2, mathescape, breaklines = true, numbersep = 6.5pt},
+  overlay         = {%
+      \begin{tcbclipinterior}
+      \draw[black] ([xshift = 6mm]frame.south west) -- ([xshift = 6mm]frame.north west);
+    \end{tcbclipinterior}
+    },
+  #1%
+}
 
+\NewDocumentCommand{\inputcode}{O{language = python} m}{%
+\setkeys{codebox}{#1}%
+\begin{codefilebox}
+  \inputminted[linenos, numbersep = 8pt, fontsize = \footnotesize, baselinestretch = 1.2, mathescape, breaklines = true, numbersep = 6.5pt]{\codebox@language}{#2}
+\end{codefilebox}\noindent%
+}
+
+\let\oldcodefilebox\codefilebox
+\RenewDocumentCommand{\codefilebox}{O{}}{%
+  \setkeys{codebox}{#1}%
+  \oldcodefilebox[title = \hspace{-6mm}\small\bfseries 代码 \thetcbcounter. \codebox@caption, label = \codebox@label, minted language = \codebox@language]%
+}
 
 \let\oldendcodebox\endcodebox
 \renewcommand{\endcodebox}{\oldendcodebox\noindent}
